@@ -66,7 +66,7 @@ func readConfig() Config {
 }
 
 func mongoConnect() mongo.Collection{
-	c:=mongo.NewClient("","","127.0.0.1",27017)
+	c:=mongo.NewClient("","","localhost",27017)
 	c.Connection()
 	collection:=c.NewCollection("test","mycollection",true)
 	return collection
