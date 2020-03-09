@@ -10,31 +10,20 @@ import (
 	
 	"strings"
 	
-	"github.com/user/hello/mongo"
+	"my-telegram-task-planner-bot/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-// var numericKeyboard = tgbotapi.NewReplyKeyboard(
-// 	tgbotapi.NewKeyboardButtonRow(
-// 		tgbotapi.NewKeyboardButton("10 min"),
-// 		tgbotapi.NewKeyboardButton("15 min"),
-// 	),
-// 	tgbotapi.NewKeyboardButtonRow(
-// 		tgbotapi.NewKeyboardButton("20 min"),
-// 		tgbotapi.NewKeyboardButton("30 min"),
-// 	),
-// )
 var timerKeyboard = tgbotapi.NewReplyKeyboard(
 	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("5 sec"),
-		tgbotapi.NewKeyboardButton("2 sec"),
+		tgbotapi.NewKeyboardButton("10 min"),
+		tgbotapi.NewKeyboardButton("15 min"),
 	),
 	tgbotapi.NewKeyboardButtonRow(
-		tgbotapi.NewKeyboardButton("3 sec"),
-		tgbotapi.NewKeyboardButton("1 sec"),
+		tgbotapi.NewKeyboardButton("20 min"),
+		tgbotapi.NewKeyboardButton("30 min"),
 	),
-	
 )
 
 type taskTime struct{
@@ -97,27 +86,27 @@ func createTaskButtons(tt []taskTime)( button tgbotapi.ReplyKeyboardMarkup) {
 		if v.Task!=""{
 			switch taskNo{
 			case 0:
-				fmt.Println("case0")
+				
 				a:=tgbotapi.NewKeyboardButton(v.Task)
 				b=tgbotapi.NewKeyboardButtonRow(a)
 				taskNo++	
 			case 1:
-				fmt.Println("case1")
+				
 				a:=tgbotapi.NewKeyboardButton(v.Task)
 				c=tgbotapi.NewKeyboardButtonRow(a)
 				taskNo++	
 			case 2:
-				fmt.Println("case2")
+				
 				a:=tgbotapi.NewKeyboardButton(v.Task)
 				d=tgbotapi.NewKeyboardButtonRow(a)	
 				taskNo++
 			case 3:
-				fmt.Println("case3")
+				
 				a:=tgbotapi.NewKeyboardButton(v.Task)
 				e=tgbotapi.NewKeyboardButtonRow(a)
 				taskNo++	
 			case 4:
-				fmt.Println("case4")
+				
 				a:=tgbotapi.NewKeyboardButton(v.Task)
 				f=tgbotapi.NewKeyboardButtonRow(a)
 				button=	tgbotapi.NewReplyKeyboard(b,c,d,e,f)
@@ -128,19 +117,19 @@ func createTaskButtons(tt []taskTime)( button tgbotapi.ReplyKeyboardMarkup) {
 		}
 		if exitFlag==1 && coveredFlag!=4{
 			if taskNo==1{
-			fmt.Println("i1")
+			
 			button=	tgbotapi.NewReplyKeyboard(b)
 			return
 		}else if taskNo==2{
-			fmt.Println("i2")
+		
 			button=	tgbotapi.NewReplyKeyboard(b,c)
 			return
 		}else if taskNo==3{
-			fmt.Println("i3")
+			
 			button=	tgbotapi.NewReplyKeyboard(b,c,d)
 			return
 		}else if taskNo==4{
-			fmt.Println("i4")
+			
 			button=	tgbotapi.NewReplyKeyboard(b,c,d,e)
 			return
 
@@ -180,14 +169,14 @@ func setSleepTimer(timer string){
 	timeVal:=strings.Split(timer,"")
 	getTime:=timeVal[0]
 	switch getTime{
-	case "5":
-		time.Sleep(5 * time.Second)
-	case "2":
-		time.Sleep(2 * time.Second)
-	case "1":
-		time.Sleep(1 * time.Second)
-	case "3":
-		time.Sleep(3 * time.Second)
+	case "30":
+		time.Sleep(30 * time.Minute)
+	case "20":
+		time.Sleep(20 * time.Minute)
+	case "15":
+		time.Sleep(15 * time.Minute)
+	case "10":
+		time.Sleep(10 * time.Minute)
 
 	}
 }
@@ -265,23 +254,22 @@ func main() {
 	
 		switch update.Message.Text {
 		
-		case "o":
+		case "todo":
 			commandFlag="todo"
-		case "t":
+		case "setime":
 			commandFlag="time"
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID,"Please set the timer for your task")
 			msg.ReplyMarkup = timerKeyboard
 			bot.Send(msg)
 		case "start":
-			fmt.Println(tasktime)
-			fmt.Println("in start")
+			fmt.Println(tasktime)	
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID,"Which task do you want to start first?")
 			msg.ReplyMarkup =   createTaskButtons(tasktime)
 			bot.Send(msg)
 			startFlag=1
 		case updateMsg:
 			if startFlag==1{
-				fmt.Println("inside m ")
+			
 				timer:=getTimer(tasktime,updateMsg)
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID,"Please start your Task: "+updateMsg+" !!!\nStarting Timer for "+timer)
 				bot.Send(msg)
