@@ -18,7 +18,6 @@ import (
 
 var timeout = 5 * time.Minute
 
-// ID is a generic type for view26 entity IDs
 type ID = primitive.ObjectID
 
 // NewID generates a new ID.
